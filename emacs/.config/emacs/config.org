@@ -1,0 +1,278 @@
+#+TITLE:mw config
+#+STARTUP: showeverything
+#+OPTIONS: TOC:2
+
+
+* Basic settings/package archives
+#+begin_src emacs-lisp
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			   ("org" . "https://orgmode.org/elpa/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (setq inhibit-startup-message t)
+  (setq use-package-always-ensure t)
+ 
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 10)
+  (set-face-attribute 'default nil :font "Fira Code Retina" :height 210)
+  (menu-bar-mode -1)
+  (setq split-width-threshold 1)
+  (setq visible-bell t)
+  (setq user-full-name "Jason Harris"
+	user-mail-address "metalnwood@gmail.com")
+  (setq display-line-numbers-type t)
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode)
+  (setq dired-kill-when-opening-new-dired-buffer nil)
+#+end_src
+
+
+* Evil mode
+#+begin_src emacs-lisp
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    ;; :hook (evil-mode . maw/evil-hook)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
+
+    (evil-mode 1)
+
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (setq evil-collection-mode-list '(dashboard dired ibuffer))
+    (evil-collection-init))
+#+end_src
+
+* Lispy things  lispy/lispyville/sly
+#+begin_src emacs-lisp
+  (use-package lispy
+    :ensure t
+    :config
+    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
+  (use-package lispyville
+    :ensure t
+    :after lispy
+    :config
+    (add-hook 'lispy-mode-hook #'lispyville-mode))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package sly)
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+#+end_src
+
+* General keys/which key/helpful
+
+#+begin_src emacs-lisp
+(use-package general
+    :ensure t
+    :config
+    (general-evil-setup)
+    (general-create-definer mw/leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC"
+      :global-prefix "M-SPC")
+
+    (mw/leader-keys
+      "b" '(:ignore t :wk "buffer")
+      "bb" '(counsel-ibuffer :wk "Switch buffer")
+      "bk" '(kill-this-buffer :wk "Kill buffer")
+      "bn" '(next-buffer :wk "Next buffer")
+      "bp" '(previous-buffer :wk "Previous buffer")
+      "br" '(revert-buffer :wk "Reload buffer")
+      "f" '(:ignore t :wk "file")
+      "ff" '(counsel-find-file :wk "Find file")
+      "fs" '(save-buffer :wk "Find file")
+      "fc" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :wk "Load init.el")
+      ))
+  (use-package which-key
+    :ensure t
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+  (use-package helpful
+    :ensure t
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helpful-key))
+#+end_src
+* Themes
+
+#+begin_src emacs-lisp
+(use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
+	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-one t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (nerd-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+    (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
+
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+
+
+  ;; first time this is run also need to run M-x all-the-icons-install-fonts
+  (use-package all-the-icons
+    :ensure t
+    :if (display-graphic-p))
+
+#+end_src
+
+* Counsel/ivy/swiper
+#+begin_src emacs-lisp
+  (use-package counsel
+    :ensure t
+    :bind (("M-x" . counsel-M-x)
+	   ("C-x b" . counsel-ibuffer)
+	   ("C-x C-f" . counsel-find-file)
+	   :map minibuffer-local-map
+	   ("C-r" . 'counsel-minibuffer-history)))
+
+  (use-package swiper
+    :ensure t)
+
+  (use-package ivy
+    :ensure t
+    :bind (("C-M-s" . 'swiper ))
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (setq enable-recursive-minibuffers t))
+
+  (use-package ivy-rich
+    :ensure t
+    :init
+    (ivy-rich-mode  1))
+#+end_src
+* Projectile/magit
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p "~/Projects/code")
+      (setq projectile-project-search-path '("~/Projects/code")))
+    (setq projectile-switch-project-action #'projectile-dired))
+
+  (use-package counsel-projectile
+    :config (counsel-projectile-mode))
+
+
+   (use-package magit
+     :ensure t
+     :custom
+     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+#+end_src
+* Completion
+
+#+begin_src emacs-lisp
+(use-package company
+    :ensure t
+    :init
+    (add-hook 'after-init-hook 'global-company-mode))
+
+#+end_src
+
+* Utility avy
+#+begin_src emacs-lisp
+  (setq avy-keys '(?a ?o ?e ?u ?d ?h ?t ?n ?s))
+  (use-package avy
+    :ensure t
+    :init
+    (global-set-key (kbd "C-S-s") 'avy-goto-char-2))
+#+end_src
+
+#+begin_src emacs-lisp
+#+end_src
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+  
+
+  ;; (use-package corfu
+  ;;   :ensure t
+  ;;   :init (global-corfu-mode))
+  (setq corfu-auto t
+	corfu-quit-no-match 'separator)
+
+
+
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(custom-safe-themes
+     '("3061706fa92759264751c64950df09b285e3a2d3a9db771e99bcbb2f9b470037" "0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1" "4ade6b630ba8cbab10703b27fd05bb43aaf8a3e5ba8c2dc1ea4a2de5f8d45882" default))
+   '(package-selected-packages
+     '(counsel-projectile projectile evil-collection general all-the-icons helpful ivy-rich magit evil doom-themes doom-modeline which-key lispy sly avy company counsel ivy corfu)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+
+
+
+* Language     
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+  :ensure t)
+#+end_src
