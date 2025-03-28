@@ -2,5 +2,5 @@
 
 stow i3
 stow waybar
-stow emacs
+stow doom
 stow zsh
