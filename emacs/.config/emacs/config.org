@@ -19,7 +19,7 @@
     (menu-bar-mode -1)
     (setq split-width-threshold 1)
     (setq visible-bell t)
-    (setq user-full-name "Jason Harris"
+    (setq user-full-name "J Harris"
     	user-mail-address "metalnwood@gmail.com")
     (setq display-line-numbers-type t)
     (setq display-line-numbers-type 'relative)
