@@ -18,6 +18,10 @@
   (if (eq system-type 'android)
     (set-face-attribute 'default nil  :height 210)
     (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
+
+;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
+
+
   (menu-bar-mode -1)
   (setq split-width-threshold 1)
   (setq visible-bell t)
@@ -411,57 +415,53 @@
 
 * Key mappings
 #+begin_src emacs-lisp
-  (global-set-key  (kbd  "C-z")  #'jason-center)
-;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
-  (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
-  (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
-  (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
-  (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
-  (global-set-key  (kbd "C-o")  #'maw/vim-o)
-  (global-set-key  (kbd "M-z")  #'zap-up-to-char)
-  (global-set-key  (kbd "M-o")  #'other-window)
-      (mw/leader-keys
-        "b" '(:ignore t :wk "buffer")
-        "bb" '(counsel-ibuffer :wk "Switch buffer")
-        "bk" '(kill-this-buffer :wk "Kill buffer")
-        "bn" '(next-buffer :wk "Next buffer")
-        "bp" '(previous-buffer :wk "Previous buffer")
-        "br" '(revert-buffer :wk "Reload buffer")
-        "f" '(:ignore t :wk "file")
-        "ff" '(counsel-find-file :wk "Find file")
-        "fs" '(save-buffer :wk "Find file")
-        "fc" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :wk "Load init.el")
-        ))
-    (use-package which-key
-      :ensure t
-      :init (which-key-mode)
-      :diminish which-key-mode
-      :config
-      (setq which-key-idle-delay 0.3))
-    (use-package helpful
-      :ensure t
-      :custom
-      (counsel-describe-function-function #'helpful-callable)
-      (counsel-describe-variable-function #'helpful-variable)
-      :bind
-      ([remap describe-function] . counsel-describe-function)
-      ([remap describe-command] . helpful-command)
-      ([remap describe-variable] . counsel-describe-variable)
-      ([remap describe-key] . helpful-key))
-#+end_src
 
-#+begin_src emacs-lisp
-          (global-set-key  (kbd  "C-z")  #'jason-center)
-        ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
-          (global-set-key  (kbd "C-S-n")  #'maw/down-ten-lines)
-          (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
-          (global-set-key  (kbd"C-S-p")  #'maw/up-ten-lines)
-          (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
-          (global-set-key  (kbd"C-o")  #'maw/vim-o)
           (global-set-key  (kbd"M-S-d")  '(lambda ()
       				       (interactive)
     				       (left-word)
   				       (kill-word)))
+
+
+  (global-set-key  (kbd  "C-z")  #'jason-center)
+    ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
+      (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
+      (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
+      (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
+      (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
+      (global-set-key  (kbd "C-o")  #'maw/vim-o)
+      (global-set-key  (kbd "M-z")  #'zap-up-to-char)
+      (global-set-key  (kbd "M-o")  #'other-window)
+          (mw/leader-keys
+            "b" '(:ignore t :wk "buffer")
+            "bb" '(counsel-ibuffer :wk "Switch buffer")
+            "bk" '(kill-this-buffer :wk "Kill buffer")
+            "bn" '(next-buffer :wk "Next buffer")
+            "bp" '(previous-buffer :wk "Previous buffer")
+            "br" '(revert-buffer :wk "Reload buffer")
+            "f" '(:ignore t :wk "file")
+            "ff" '(counsel-find-file :wk "Find file")
+            "fs" '(save-buffer :wk "Find file")
+            "fc" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :wk "Load init.el")
+            ))
+        (use-package which-key
+          :ensure t
+          :init (which-key-mode)
+          :diminish which-key-mode
+          :config
+          (setq which-key-idle-delay 0.3))
+        (use-package helpful
+          :ensure t
+          :custom
+          (counsel-describe-function-function #'helpful-callable)
+          (counsel-describe-variable-function #'helpful-variable)
+          :bind
+          ([remap describe-function] . counsel-describe-function)
+          ([remap describe-command] . helpful-command)
+          ([remap describe-variable] . counsel-describe-variable)
+          ([remap describe-key] . helpful-key))
+#+end_src
+
+#+begin_src emacs-lisp
           
 #+end_src
 * Misc Multiple cursors/ER Region/move text
