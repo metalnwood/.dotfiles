@@ -379,28 +379,33 @@
 
 * Custom functions
 #+begin_src emacs-lisp
-    (defun jason-center ()
-     "zz but a bit higher than center"
-     (interactive)
-     (recenter)
-     (scroll-up 8))
+        (defun jason-center ()
+         "zz but a bit higher than center"
+         (interactive)
+         (recenter)
+         (scroll-up 8))
 
-    (defun maw/down-ten-lines ()
+  (defun maw/dup-line ()
       (interactive)
-      (next-line 10))
+      (duplicate-line)
+      (next-line))
+    
+        (defun maw/down-ten-lines ()
+          (interactive)
+          (next-line 10))
 
-  (defun maw/up-ten-lines ()
-    (interactive)
-    (previous-line 10))
+      (defun maw/up-ten-lines ()
+        (interactive)
+        (previous-line 10))
 
-  (defun maw/kill-to-beginning ()
-    (interactive)
-    (kill-line 0 ))
+      (defun maw/kill-to-beginning ()
+        (interactive)
+        (kill-line 0 ))
 
-  (defun maw/vim-o ()
-    (interactive)
-    (move-end-of-line  1)
-    (newline-and-indent))
+      (defun maw/vim-o ()
+        (interactive)
+        (move-end-of-line  1)
+        (newline-and-indent))
 
 #+end_src
 
@@ -408,7 +413,7 @@
 #+begin_src emacs-lisp
   (global-set-key  (kbd  "C-z")  #'jason-center)
 ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
-  (global-set-key  (kbd "C-S-n")  #'maw/down-ten-lines)
+  (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
   (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
   (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
   (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
@@ -481,7 +486,7 @@
   (use-package move-text 
             :ensure t
   	  :config
-  	      (move-text-default-bindings))
+  	      (move-text-default-bindings)) 
 
 #+end_src
 
