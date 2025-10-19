@@ -2,42 +2,44 @@
 #+STARTUP: showeverything
 #+OPTIONS: TOC:2
 
+
 * Basic settings/package archives
 #+begin_src emacs-lisp
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-      			 ("org" . "https://orgmode.org/elpa/")
-      			 ("elpa" . "https://elpa.gnu.org/packages/")))
+    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+        			 ("org" . "https://orgmode.org/elpa/")
+        			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
+  (add-to-list 'load-path "~/.config/emacs/maw") 
   (setq inhibit-startup-message t)
-  (setq use-package-always-ensure t)
+    (setq use-package-always-ensure t)
 
-  (scroll-bar-mode -1)
-  (tool-bar-mode -1)
-  (tooltip-mode -1)
-  (set-fringe-mode 10)
-  (if (eq system-type 'android)
-    (set-face-attribute 'default nil  :height 210)
-    (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
+    (tooltip-mode -1)
+    (set-fringe-mode 10)
+    (if (eq system-type 'android)
+      (set-face-attribute 'default nil  :height 210)
+      (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
 
-;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
-
-
-  (menu-bar-mode -1)
-  (setq split-width-threshold 1)
-  (setq visible-bell t)
-  (setq user-full-name "J Harris"
-        user-mail-address "metalnwood@gmail.com")
-  (setq display-line-numbers-type t)
-  (setq display-line-numbers-type 'relative)
-  (setq split-height-threshold 25)
+  ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
 
 
-  (global-display-line-numbers-mode)
-  (setq dired-kill-when-opening-new-dired-buffer nil)
-  ;;    (add-to-list 'eglot-server-programs	
-  ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
-  ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
-  ;;
+    (menu-bar-mode -1)
+    (setq split-width-threshold 1)
+    (setq visible-bell t)
+    (setq user-full-name "J Harris"
+          user-mail-address "metalnwood@gmail.com")
+    (setq display-line-numbers-type t)
+    (setq display-line-numbers-type 'relative)
+    (setq split-height-threshold 25)
+
+
+    (global-display-line-numbers-mode)
+    (setq dired-kill-when-opening-new-dired-buffer nil)
+    ;;    (add-to-list 'eglot-server-programs	
+    ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
+    ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
+    ;;
 #+end_src
 
 * Minibuffer vertico/marginalia/orderless 
@@ -102,101 +104,105 @@
 #+end_src
 * Lispy things  lispy/lispyville/sly/paredit
 #+begin_src emacs-lisp
-    (use-package lispy
-      :ensure t
-      :config
-      (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-      (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1))))
+     (use-package lispy
+       :ensure t
+       :config
+       (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+       (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1))))
 
-    (use-package paredit
-    	    :ensure t)
-    	    
+  ;(use-package paredit
+  ;   	    :ensure t)
+     	    
 
-    (use-package rainbow-delimiters
-      :ensure t
-      :hook (prog-mode . rainbow-delimiters-mode))
-    (use-package sly
-      :ensure t)
-  (if (eq system-type 'android)
-      (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
-    (setq inferior-lisp-program "/usr/bin/sbcl"))
+     (use-package rainbow-delimiters
+       :ensure t
+       :hook (prog-mode . rainbow-delimiters-mode))
+     (use-package sly
+       :ensure t)
+   (if (eq system-type 'android)
+       (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
+     (setq inferior-lisp-program "/usr/bin/sbcl"))
 #+end_src
 
 * General keys/which key/helpful
 
 #+begin_src emacs-lisp
-  (use-package general
-      :ensure t
-      :config
+    (use-package general
+        :ensure t
+        :config
 
-      (general-create-definer mw/leader-keys
-        :states '( emacs)
-        :keymaps 'override
-        ;;:prefix "SPC"
-        :global-prefix "M-SPC")
+        (general-create-definer mw/leader-keys
+          :keymaps 'override
+          ;;:prefix "SPC"
+  ;        :global-prefix "M-SPC")
+          :prefix "M-SPC")
 
-      (mw/leader-keys
-        "b" '(:ignore t :wk "buffer")
-        "bb" '(counsel-ibuffer :wk "Switch buffer")
-        "bk" '(kill-this-buffer :wk "Kill buffer")
-        "bn" '(next-buffer :wk "Next buffer")
-        "bp" '(previous-buffer :wk "Previous buffer")
-        "br" '(revert-buffer :wk "Reload buffer")
-        "f" '(:ignore t :wk "file")
-        "ff" '(counsel-find-file :wk "Find file")
-        "fs" '(save-buffer :wk "Find file")
-        "fc" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :wk "Load init.el")
-        )
-    (use-package which-key
-      :ensure t
-      :init (which-key-mode)
-      :diminish which-key-mode
-      :config
-      (setq which-key-idle-delay 0.3))
-    (use-package helpful
-      :ensure t
-      :custom
-      (counsel-describe-function-function #'helpful-callable)
-      (counsel-describe-variable-function #'helpful-variable)
-      :bind
-      ([remap describe-function] . counsel-describe-function)
-      ([remap describe-command] . helpful-command)
-      ([remap describe-variable] . counsel-describe-variable)
-      ([remap describe-key] . helpful-key))
+        (mw/leader-keys
+          "b" '(:ignore t :wk "buffer")
+          "bb" '(counsel-ibuffer :wk "Switch buffer")
+          "bk" '(kill-this-buffer :wk "Kill buffer")
+          "bn" '(next-buffer :wk "Next buffer")
+          "bp" '(previous-buffer :wk "Previous buffer")
+          "br" '(revert-buffer :wk "Reload buffer")
+          "f" '(:ignore t :wk "file")
+          "ff" '(counsel-find-file :wk "Find file")
+          "fs" '(save-buffer :wk "Save File")
+          "fc" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Load config.org")
+          ))
+
+      (use-package which-key
+        :ensure t
+        :init (which-key-mode)
+        :diminish which-key-mode
+        :config
+        (setq which-key-idle-delay 0.3))
+      (use-package helpful
+        :ensure t
+        :custom
+        (counsel-describe-function-function #'helpful-callable)
+        (counsel-describe-variable-function #'helpful-variable)
+        :bind
+        ([remap describe-function] . counsel-describe-function)
+        ([remap describe-command] . helpful-command)
+        ([remap describe-variable] . counsel-describe-variable)
+        ([remap describe-key] . helpful-key))
 #+end_src
 * Themes
 
 #+begin_src emacs-lisp
-(use-package doom-themes
-    :ensure t
-    :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
-	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-one t)
+  (use-package doom-themes
+      :ensure t
+      :config
+      ;; Global settings (defaults)
+      (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
+  	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+      (load-theme 'doom-one t)
 
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-    ;; Enable custom neotree theme (nerd-icons must be installed!)
-    (doom-themes-neotree-config)
-    ;; or for treemacs users
-    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-    (doom-themes-treemacs-config)
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config))
-
-
-  (use-package doom-modeline
-    :ensure t
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 15)))
+      ;; Enable flashing mode-line on errors
+      (doom-themes-visual-bell-config)
+      ;; Enable custom neotree theme (nerd-icons must be installed!)
+      (doom-themes-neotree-config)
+      ;; or for treemacs users
+      (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+      (doom-themes-treemacs-config)
+      ;; Corrects (and improves) org-mode's native fontification.
+      (doom-themes-org-config))
 
 
-  ;; first time this is run also need to run M-x all-the-icons-install-fonts
-  (use-package all-the-icons
-    :ensure t
-    :if (display-graphic-p))
+    (use-package doom-modeline
+      :ensure t
+      :init (doom-modeline-mode 1)
+      :custom ((doom-modeline-height 15)))
 
+
+    ;; first time this is run also need to run M-x all-the-icons-install-fonts
+    (use-package all-the-icons
+      :ensure t
+      :if (display-graphic-p))
+
+    ;; set scrolling better
+    (setq scroll-conservatively 10
+      scroll-margin 15)
 #+end_src
 
 * Consult/Embark 
@@ -383,34 +389,57 @@
 
 * Custom functions
 #+begin_src emacs-lisp
-        (defun jason-center ()
-         "zz but a bit higher than center"
-         (interactive)
-         (recenter)
-         (scroll-up 8))
+          (defun jason-center ()
+           "zz but a bit higher than center"
+           (interactive)
+           (recenter)
+           (scroll-up 8))
 
-  (defun maw/dup-line ()
+
+    (defun maw/ciq ()
       (interactive)
-      (duplicate-line)
-      (next-line))
+      (let ((in-string (nth 3 (syntax-ppss))))
+        (cond (in-string (search-backward "\"")
+    		     (kill-sexp)
+    		     (insert "\"\"")
+    		     (backward-char))
+    	  (t (let ((res (search-forward "\"")))
+    	       (when res
+    		 (backward-char)
+    		 (kill-sexp)
+    		 (insert "\"\"")
+     		 (backward-char)))))))
+
+  (defun maw/daw ()
+      (interactive)
+      (backward-word)
+      (kill-word 1))
     
-        (defun maw/down-ten-lines ()
+    (defun maw/dup-line ()
+        (interactive)
+        (duplicate-dwim)
+        (next-line))
+      
+          (defun maw/down-ten-lines ()
+            (interactive)
+            (next-line 10))
+
+        (defun maw/up-ten-lines ()
           (interactive)
-          (next-line 10))
+          (previous-line 10))
 
-      (defun maw/up-ten-lines ()
-        (interactive)
-        (previous-line 10))
+        (defun maw/kill-to-beginning ()
+          (interactive)
+          (kill-line 0 ))
 
-      (defun maw/kill-to-beginning ()
-        (interactive)
-        (kill-line 0 ))
+        (defun maw/vim-o ()
+          (interactive)
+          (move-end-of-line  1)
+          (newline-and-indent))
 
-      (defun maw/vim-o ()
-        (interactive)
-        (move-end-of-line  1)
-        (newline-and-indent))
-
+    (defun maw/load-emacs-config ()
+      (interactive)
+      (find-file "~/.config/emacs/config.org"))
 #+end_src
 
 * Key mappings
@@ -425,24 +454,14 @@
   (global-set-key  (kbd  "C-z")  #'jason-center)
     ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
       (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
+      (global-set-key  (kbd "C-M-'")  #'maw/ciq)
       (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
       (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
       (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
       (global-set-key  (kbd "C-o")  #'maw/vim-o)
       (global-set-key  (kbd "M-z")  #'zap-up-to-char)
       (global-set-key  (kbd "M-o")  #'other-window)
-          (mw/leader-keys
-            "b" '(:ignore t :wk "buffer")
-            "bb" '(counsel-ibuffer :wk "Switch buffer")
-            "bk" '(kill-this-buffer :wk "Kill buffer")
-            "bn" '(next-buffer :wk "Next buffer")
-            "bp" '(previous-buffer :wk "Previous buffer")
-            "br" '(revert-buffer :wk "Reload buffer")
-            "f" '(:ignore t :wk "file")
-            "ff" '(counsel-find-file :wk "Find file")
-            "fs" '(save-buffer :wk "Find file")
-            "fc" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :wk "Load init.el")
-            ))
+          
         (use-package which-key
           :ensure t
           :init (which-key-mode)
@@ -488,6 +507,12 @@
   	  :config
   	      (move-text-default-bindings)) 
 
+  ;; to move line above by copying a line below.
+  (global-set-key [C-M-down] #'windmove-down)
+  (global-set-key [C-M-up] #'windmove-up )
+  (global-set-key [C-M-left] #'windmove-left )
+  (global-set-key [C-M-right] #'windmove-right )
+  (global-set-key [C-S-n] #'duplicate-line )
 #+end_src
 
 
