@@ -17,14 +17,15 @@
     (tool-bar-mode -1)
     (tooltip-mode -1)
     (set-fringe-mode 10)
+    (column-number-mode 1)
     (if (eq system-type 'android)
       (set-face-attribute 'default nil  :height 210)
       (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
 
-  
+
   ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
 
-
+    (setq set-mark-command-repeat-pop 1)
     (menu-bar-mode -1)
     (setq split-width-threshold 1)
     (setq visible-bell t)
@@ -41,6 +42,13 @@
     ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
     ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
     ;;
+
+    ;; Set search so that i-search will finish at the start of the search term, not the end.
+    (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+    (defun my-goto-match-beginning ()
+      (when (and isearch-forward isearch-other-end (not isearch-mode-end-hook-quit))
+        (goto-char isearch-other-end)))
+  
 #+end_src
 
 * Minibuffer vertico/marginalia/orderless 
@@ -120,6 +128,7 @@
        :hook (prog-mode . rainbow-delimiters-mode))
      (use-package sly
        :ensure t)
+     (sly-symbol-completion-mode -1)
    (if (eq system-type 'android)
        (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
      (setq inferior-lisp-program "/usr/bin/sbcl"))
@@ -149,6 +158,9 @@
           "ff" '(counsel-find-file :wk "Find file")
           "fs" '(save-buffer :wk "Save File")
           "fc" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Load config.org")
+  	"qq" '(save-buffers-kill-terminal :wk "Close Emacs")
+  	"'" '(jump-to-register :wk "Jump to Register")
+  	"m" '(point-to-register :wk "Save Point to Register")  	
           ))
 
       (use-package which-key
@@ -456,7 +468,7 @@
     				       (left-word)
   				       (kill-word)))
 
-
+;good keys to rebind C-q C-j C-m 
   (global-set-key  (kbd  "C-z")  #'jason-center)
     ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
       (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
@@ -467,7 +479,11 @@
       (global-set-key  (kbd "C-o")  #'maw/vim-o)
       (global-set-key  (kbd "M-z")  #'zap-up-to-char)
       (global-set-key  (kbd "M-o")  #'other-window)
-          
+      (global-set-key  (kbd "M-\"")  #'cycle-spacing)
+      (global-set-key  (kbd "C-<tab>")  #'complete-symbol)
+      (global-set-key  (kbd "C-M-S-n")  #'next-buffer)
+      (global-set-key  (kbd "C-M-S-h")  #'previous-buffer)
+  
         (use-package which-key
           :ensure t
           :init (which-key-mode)

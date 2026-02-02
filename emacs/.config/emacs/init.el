@@ -16,10 +16,11 @@
  '(package-selected-packages
    '(all-the-icons company consult corfu counsel-projectile doom-modeline
 		   doom-themes evil-collection expand-region general
-		   helpful inf-elixir ivy-rich lispyville lua-mode
-		   magit marginalia move-text multiple-cursors
-		   orderless paredit rainbow-delimiters sly vertico
-		   which-key yasnippet-snippets)))
+		   helpful inf-elixir ivy-rich lispyville lorem-ipsum
+		   lua-mode magit marginalia move-text
+		   multiple-cursors orderless paredit racket-mode
+		   rainbow-delimiters sly vertico which-key
+		   yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
