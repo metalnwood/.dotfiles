@@ -5,50 +5,51 @@
 
 * Basic settings/package archives
 #+begin_src emacs-lisp
-    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-        			 ("org" . "https://orgmode.org/elpa/")
-        			 ("elpa" . "https://elpa.gnu.org/packages/")))
+     (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+         			 ("org" . "https://orgmode.org/elpa/")
+         			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
-  (add-to-list 'load-path "~/.config/emacs/maw") 
-  (setq inhibit-startup-message t)
-    (setq use-package-always-ensure t)
+   (add-to-list 'load-path "~/.config/emacs/maw") 
+   (setq inhibit-startup-message t)
+     (setq use-package-always-ensure t)
 
-    (scroll-bar-mode -1)
-    (tool-bar-mode -1)
-    (tooltip-mode -1)
-    (set-fringe-mode 10)
-    (column-number-mode 1)
-    (if (eq system-type 'android)
-      (set-face-attribute 'default nil  :height 210)
-      (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
-
-
-  ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
-
-    (setq set-mark-command-repeat-pop 1)
-    (menu-bar-mode -1)
-    (setq split-width-threshold 1)
-    (setq visible-bell t)
-    (setq user-full-name "J Harris"
-          user-mail-address "metalnwood@gmail.com")
-    (setq display-line-numbers-type t)
-    (setq display-line-numbers-type 'relative)
-    (setq split-height-threshold 25)
+     (scroll-bar-mode -1)
+     (tool-bar-mode -1)
+     (tooltip-mode -1)
+     (set-fringe-mode 10)
+     (column-number-mode 1)
+     (if (eq system-type 'android)
+       (set-face-attribute 'default nil  :height 210)
+       (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
 
 
-    (global-display-line-numbers-mode)
-    (setq dired-kill-when-opening-new-dired-buffer nil)
-    ;;    (add-to-list 'eglot-server-programs	
-    ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
-    ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
-    ;;
+   ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
 
-    ;; Set search so that i-search will finish at the start of the search term, not the end.
-    (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-    (defun my-goto-match-beginning ()
-      (when (and isearch-forward isearch-other-end (not isearch-mode-end-hook-quit))
-        (goto-char isearch-other-end)))
-  
+     (setq set-mark-command-repeat-pop 1)
+     (menu-bar-mode -1)
+     (setq split-width-threshold 1)
+     (setq visible-bell t)
+     (setq user-full-name "J Harris"
+           user-mail-address "metalnwood@gmail.com")
+  (setq display-line-numbers-type t)
+     (setq display-line-numbers-type 'relative)
+     (setq split-height-threshold 25)
+
+
+     (global-display-line-numbers-mode)
+     (setq dired-kill-when-opening-new-dired-buffer nil)
+     ;;    (add-to-list 'eglot-server-programs	
+     ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
+     ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
+     ;;
+
+     ;; Set search so that i-search will finish at the start of the search term, not the end.
+
+     (defun my-goto-match-beginning ()
+       (when (and isearch-forward isearch-other-end (not isearch-mode-end-hook-quit))
+         (goto-char isearch-other-end)))
+     (define-key isearch-mode-map (kbd "C-v") 'isearch-exit)
+
 #+end_src
 
 * Minibuffer vertico/marginalia/orderless 
@@ -113,25 +114,28 @@
 #+end_src
 * Lispy things  lispy/lispyville/sly/paredit
 #+begin_src emacs-lisp
-     (use-package lispy
-       :ensure t
-       :config
-       (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-       (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1))))
+         (use-package lispy
+           :ensure t
+           :config
+           (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+           (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1)))
+           :bind (
+  		           ("M-o" . other-window )))
 
-  ;(use-package paredit
-  ;   	    :ensure t)
-     	    
+      ;(use-package paredit
+      ;   	    :ensure t)
+         	    
 
-     (use-package rainbow-delimiters
-       :ensure t
-       :hook (prog-mode . rainbow-delimiters-mode))
-     (use-package sly
-       :ensure t)
-     (sly-symbol-completion-mode -1)
-   (if (eq system-type 'android)
-       (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
-     (setq inferior-lisp-program "/usr/bin/sbcl"))
+         (use-package rainbow-delimiters
+           :ensure t
+           :hook (prog-mode . rainbow-delimiters-mode))
+         (use-package sly
+           :ensure t)
+      
+         (sly-symbol-completion-mode -1)
+       (if (eq system-type 'android)
+           (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
+         (setq inferior-lisp-program "/usr/bin/sbcl"))
 #+end_src
 
 * General keys/which key/helpful
@@ -433,7 +437,7 @@
       (backward-word)
       (kill-word 1))
     
-    (defun maw/dup-line ()
+  (defun maw/dup-line ()
         (interactive)
         (duplicate-dwim)
         (next-line))
@@ -483,6 +487,12 @@
       (global-set-key  (kbd "C-<tab>")  #'complete-symbol)
       (global-set-key  (kbd "C-M-S-n")  #'next-buffer)
       (global-set-key  (kbd "C-M-S-h")  #'previous-buffer)
+      (global-set-key [C-M-down] #'windmove-down)
+      (global-set-key [C-M-up] #'windmove-up )
+      (global-set-key [C-M-left] #'windmove-left )
+      (global-set-key [C-M-right] #'windmove-right )
+
+
   
         (use-package which-key
           :ensure t
@@ -530,11 +540,6 @@
   	      (move-text-default-bindings)) 
 
   ;; to move line above by copying a line below.
-  (global-set-key [C-M-down] #'windmove-down)
-  (global-set-key [C-M-up] #'windmove-up )
-  (global-set-key [C-M-left] #'windmove-left )
-  (global-set-key [C-M-right] #'windmove-right )
-  (global-set-key [C-S-n] #'duplicate-line )
 #+end_src
 
 
