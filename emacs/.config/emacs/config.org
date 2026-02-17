@@ -5,7 +5,8 @@
 
 * Basic settings/package archives
 #+begin_src emacs-lisp
-     (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
          			 ("org" . "https://orgmode.org/elpa/")
          			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
@@ -138,7 +139,14 @@
          (setq inferior-lisp-program "/usr/bin/sbcl"))
 #+end_src
 
+* Windows
+#+begin_src emacs-lisp
+  (winner-mode 1)
+
+#+end_src
+
 * General keys/which key/helpful
+
 
 #+begin_src emacs-lisp
     (use-package general
@@ -400,13 +408,19 @@
 
 #+end_src
 
-* Utility avy
+* Utility avy/flash
 #+begin_src emacs-lisp
   (setq avy-keys '(?a ?o ?e ?u ?d ?h ?t ?n ?s))
   (use-package avy
     :ensure t
     :init
     (global-set-key (kbd "C-S-s") 'avy-goto-char-2))
+
+  (use-package flash
+  :commands (flash-jump flash-treesitter)
+  :config
+  (require 'flash-isearch)
+  (flash-isearch-mode 1))
 #+end_src
 
 * Custom functions
