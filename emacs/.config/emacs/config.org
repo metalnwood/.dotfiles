@@ -7,55 +7,65 @@
 #+begin_src emacs-lisp
 
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-         			 ("org" . "https://orgmode.org/elpa/")
-         			 ("elpa" . "https://elpa.gnu.org/packages/")))
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
 
-   (add-to-list 'load-path "~/.config/emacs/maw") 
-   (setq inhibit-startup-message t)
-     (setq use-package-always-ensure t)
+  (add-to-list 'load-path "~/.config/emacs/maw") 
+  (setq inhibit-startup-message t)
+  (setq use-package-always-ensure t)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 10)
+  (column-number-mode 1)
+  (if (eq system-type 'android)
+      (set-face-attribute 'default nil  :height 210)
+    (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
 
-     (scroll-bar-mode -1)
-     (tool-bar-mode -1)
-     (tooltip-mode -1)
-     (set-fringe-mode 10)
-     (column-number-mode 1)
-     (if (eq system-type 'android)
-       (set-face-attribute 'default nil  :height 210)
-       (set-face-attribute 'default nil :font "Fira Code Retina" :height 210))
+  (when (eq system-type 'android)
+    (setenv "PATH" (format "%s:%s" "/data/data/com.termux/files/usr/bin" (getenv "PATH")))
+    (setenv "LD_LIBRARY_PATH" (format "%s:%s" "/data/data/com.termux/files/usr/lib" (getenv "LD_LIBRARY_PATH")))
+    (push "/data/data/com.termux/files/usr/bin" exec-path))
+  
+  (unless (display-graphic-p)
+    (use-package kkp
+      :ensure t
+      :config
+      ;; (setq kkp-alt-modifier 'alt) ;; use this if you want to map the Alt keyboard modifier to Alt in Emacs (and not to Meta)
+      (global-kkp-mode +1)))
 
+  ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
 
-   ;;  (set-face-attribute 'default nil :font "IBM Plex Mono Medium" :height 210)
-
-     (setq set-mark-command-repeat-pop 1)
-     (menu-bar-mode -1)
-     (setq split-width-threshold 1)
-     (setq visible-bell t)
-     (setq user-full-name "J Harris"
-           user-mail-address "metalnwood@gmail.com")
+  (setq set-mark-command-repeat-pop 1)
+  (menu-bar-mode -1)
+  (setq split-width-threshold 1)
+  (setq visible-bell t)
+  (setq user-full-name "J Harris"
+        user-mail-address "metalnwood@gmail.com")
   (setq display-line-numbers-type t)
-     (setq display-line-numbers-type 'relative)
-     (setq split-height-threshold 25)
+  (setq display-line-numbers-type 'relative)
+  (setq split-height-threshold 25)
 
 
-     (global-display-line-numbers-mode)
-     (setq dired-kill-when-opening-new-dired-buffer nil)
-     ;;    (add-to-list 'eglot-server-programs	
-     ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
-     ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
-     ;;
+  (global-display-line-numbers-mode)
+  (setq dired-kill-when-opening-new-dired-buffer nil)
+  ;;    (add-to-list 'eglot-server-programs	
+  ;;                '(c-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" ))
+  ;;  	      '(c++-mode . ("~/.config/emacs/.local/etc/lsp/clangd/clangd_15.0.6/bin/clangd" )))
+  ;;
 
-     ;; Set search so that i-search will finish at the start of the search term, not the end.
-    
-     (defun my-goto-match-beginning ()
-       (when (and isearch-forward isearch-other-end (not isearch-mode-end-hook-quit))
-         (goto-char isearch-other-end)))
-     (define-key isearch-mode-map (kbd "C-v") 'isearch-exit)
-     (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
-#+end_src
+  ;; Set search so that i-search will finish at the start of the search term, not the end.
+
+  (defun my-goto-match-beginning ()
+    (when (and isearch-forward isearch-other-end (not isearch-mode-end-hook-quit))
+      (goto-char isearch-other-end)))
+  (define-key isearch-mode-map (kbd "C-v") 'isearch-exit)
+  (add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+  #+end_src
 
 * Minibuffer vertico/marginalia/orderless 
 #+begin_src emacs-lisp
-    ;; Enable Vertico.
+  ;; Enable Vertico.
   (use-package vertico
     :ensure t
     :custom
@@ -86,6 +96,7 @@
     ;; Do not allow the cursor in the minibuffer prompt
     (minibuffer-prompt-properties
      '(read-only t cursor-intangible t face minibuffer-prompt)))
+
   ;; Optionally use the `orderless' completion style.
   (use-package orderless
     :ensure t
@@ -103,7 +114,7 @@
     ;; `completion-list-mode-map'.
     :ensure t
     :bind (:map minibuffer-local-map
-           ("M-A" . marginalia-cycle))
+                ("M-A" . marginalia-cycle))
 
     ;; The :init section is always executed.
     :init
@@ -115,28 +126,26 @@
 #+end_src
 * Lispy things  lispy/lispyville/sly/paredit
 #+begin_src emacs-lisp
-         (use-package lispy
-           :ensure t
-           :config
-           (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-           (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1)))
-           :bind (
-  		           ("M-o" . other-window )))
+  (use-package lispy
+    :ensure t
+    :config
+    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+    (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1)))
+    :bind (
+  	 ("M-o" . other-window )))
 
-      ;(use-package paredit
-      ;   	    :ensure t)
-         	    
 
-         (use-package rainbow-delimiters
-           :ensure t
-           :hook (prog-mode . rainbow-delimiters-mode))
-         (use-package sly
-           :ensure t)
-      
-         (sly-symbol-completion-mode -1)
-       (if (eq system-type 'android)
-           (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
-         (setq inferior-lisp-program "/usr/bin/sbcl"))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package sly
+    :ensure t)
+
+  (sly-symbol-completion-mode -1)
+  (if (eq system-type 'android)
+      (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
+    (setq inferior-lisp-program "/usr/bin/sbcl"))
 #+end_src
 
 * Windows
@@ -149,48 +158,19 @@
 
 
 #+begin_src emacs-lisp
-    (use-package general
-        :ensure t
-        :config
-
-        (general-create-definer mw/leader-keys
-          :keymaps 'override
-          ;;:prefix "SPC"
-  ;        :global-prefix "M-SPC")
-          :prefix "M-SPC")
-
-        (mw/leader-keys
-          "b" '(:ignore t :wk "buffer")
-          "bb" '(counsel-ibuffer :wk "Switch buffer")
-          "bk" '(kill-this-buffer :wk "Kill buffer")
-          "bn" '(next-buffer :wk "Next buffer")
-          "bp" '(previous-buffer :wk "Previous buffer")
-          "br" '(revert-buffer :wk "Reload buffer")
-          "f" '(:ignore t :wk "file")
-          "ff" '(counsel-find-file :wk "Find file")
-          "fs" '(save-buffer :wk "Save File")
-          "fc" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Load config.org")
-  	"qq" '(save-buffers-kill-terminal :wk "Close Emacs")
-  	"'" '(jump-to-register :wk "Jump to Register")
-  	"m" '(point-to-register :wk "Save Point to Register")  	
-          ))
-
-      (use-package which-key
-        :ensure t
-        :init (which-key-mode)
-        :diminish which-key-mode
-        :config
-        (setq which-key-idle-delay 0.3))
-      (use-package helpful
-        :ensure t
-        :custom
-        (counsel-describe-function-function #'helpful-callable)
-        (counsel-describe-variable-function #'helpful-variable)
-        :bind
-        ([remap describe-function] . counsel-describe-function)
-        ([remap describe-command] . helpful-command)
-        ([remap describe-variable] . counsel-describe-variable)
-        ([remap describe-key] . helpful-key))
+  (use-package which-key
+    :ensure t
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+  (use-package helpful
+    :ensure t
+    :bind
+    ([remap describe-function] . helpful-callable)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-key] . helpful-key))
 #+end_src
 * Themes
 
@@ -347,9 +327,7 @@
     (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none))))
-
-  )
+                 (window-parameters (mode-line-format . none)))))
 
   (use-package embark-consult
   :ensure t ; only need to install it, embark loads it after consult if found
@@ -364,17 +342,13 @@
     :ensure t
     :diminish projectile-mode
     :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
+    :custom ((projectile-completion-system 'default))
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :init
     (when (file-directory-p "~/Projects/code")
       (setq projectile-project-search-path '("~/Projects/code")))
     (setq projectile-switch-project-action #'projectile-dired))
-
-  (use-package counsel-projectile
-    :config (counsel-projectile-mode))
-
 
    (use-package magit
      :ensure t
@@ -384,10 +358,6 @@
 * Completion corfu/yassnippet
 
 #+begin_src emacs-lisp
-  ;; (use-package company
-  ;;     :ensure t
-  ;;     :init
-  ;;     (add-hook 'after-init-hook 'global-company-mode))
   (use-package corfu
      :ensure t
      :init (global-corfu-mode))
@@ -425,17 +395,17 @@
 
 * Custom functions
 #+begin_src emacs-lisp
-          (defun jason-center ()
-           "zz but a bit higher than center"
-           (interactive)
-           (recenter)
-           (scroll-up 8))
+  (defun jason-center ()
+    "zz but a bit higher than center"
+    (interactive)
+    (recenter)
+    (scroll-up 8))
 
 
-    (defun maw/ciq ()
-      (interactive)
-      (let ((in-string (nth 3 (syntax-ppss))))
-        (cond (in-string (search-backward "\"")
+  (defun maw/ciq ()
+    (interactive)
+    (let ((in-string (nth 3 (syntax-ppss))))
+      (cond (in-string (search-backward "\"")
     		     (kill-sexp)
     		     (insert "\"\"")
     		     (backward-char))
@@ -447,111 +417,96 @@
      		 (backward-char)))))))
 
   (defun maw/daw ()
-      (interactive)
-      (backward-word)
-      (kill-word 1))
-    
+    (interactive)
+    (backward-word)
+    (kill-word 1))
+
   (defun maw/dup-line ()
-        (interactive)
-        (duplicate-dwim)
-        (next-line))
-      
-          (defun maw/down-ten-lines ()
-            (interactive)
-            (next-line 10))
+    (interactive)
+    (duplicate-dwim)
+    (next-line))
 
-        (defun maw/up-ten-lines ()
-          (interactive)
-          (previous-line 10))
+  (defun maw/down-ten-lines ()
+    (interactive)
+    (next-line 10))
 
-        (defun maw/kill-to-beginning ()
-          (interactive)
-          (kill-line 0 ))
+  (defun maw/up-ten-lines ()
+    (interactive)
+    (previous-line 10))
 
-        (defun maw/vim-o ()
-          (interactive)
-          (move-end-of-line  1)
-          (newline-and-indent))
+  (defun maw/kill-to-beginning ()
+    (interactive)
+    (kill-line 0 ))
 
-    (defun maw/load-emacs-config ()
-      (interactive)
-      (find-file "~/.config/emacs/config.org"))
+  (defun maw/vim-o ()
+    (interactive)
+    (move-end-of-line  1)
+    (newline-and-indent))
+
+  (defun maw/load-emacs-config ()
+    (interactive)
+    (find-file "~/.config/emacs/config.org"))
 #+end_src
 
 * Key mappings
 #+begin_src emacs-lisp
 
-          (global-set-key  (kbd"M-S-d")  '(lambda ()
-      				       (interactive)
-    				       (left-word)
-  				       (kill-word)))
+  (global-set-key  (kbd"M-S-d")  '(lambda ()
+        				  (interactive)
+      				  (left-word)
+    				  (kill-word)))
 
-;good keys to rebind C-q C-j C-m 
+  					;good keys to rebind C-q C-j C-m 
   (global-set-key  (kbd  "C-z")  #'jason-center)
-    ;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
-      (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
-      (global-set-key  (kbd "C-M-'")  #'maw/ciq)
-      (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
-      (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
-      (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
-      (global-set-key  (kbd "C-o")  #'maw/vim-o)
-      (global-set-key  (kbd "M-z")  #'zap-up-to-char)
-      (global-set-key  (kbd "M-o")  #'other-window)
-      (global-set-key  (kbd "M-\"")  #'cycle-spacing)
-      (global-set-key  (kbd "C-<tab>")  #'complete-symbol)
-      (global-set-key  (kbd "C-M-S-n")  #'next-buffer)
-      (global-set-key  (kbd "C-M-S-h")  #'previous-buffer)
-      (global-set-key [C-M-down] #'windmove-down)
-      (global-set-key [C-M-up] #'windmove-up )
-      (global-set-key [C-M-left] #'windmove-left )
-      (global-set-key [C-M-right] #'windmove-right )
+  					;  (global-set-key  (kbd "M-RET")    #'er/expand-region)
+  (global-set-key  (kbd "C-S-n")  #'maw/dup-line)
+  (global-set-key  (kbd "C-M-'")  #'maw/ciq)
+  (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
+  (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
+  (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
+  (global-set-key  (kbd "C-o")  #'maw/vim-o)
+  (global-set-key  (kbd "M-z")  #'zap-up-to-char)
+  (global-set-key  (kbd "M-o")  #'other-window)
+  (global-set-key  (kbd "M-\"")  #'cycle-spacing)
+  (global-set-key  (kbd "C-<tab>")  #'complete-symbol)
+  (global-set-key  (kbd "C-M-S-n")  #'next-buffer)
+  (global-set-key  (kbd "C-M-S-h")  #'previous-buffer)
+  (global-set-key [C-M-down] #'windmove-down)
+  (global-set-key [C-M-up] #'windmove-up )
+  (global-set-key [C-M-left] #'windmove-left )
+  (global-set-key [C-M-right] #'windmove-right )
 
 
-  
-        (use-package which-key
-          :ensure t
-          :init (which-key-mode)
-          :diminish which-key-mode
-          :config
-          (setq which-key-idle-delay 0.3))
-        (use-package helpful
-          :ensure t
-          :custom
-          (counsel-describe-function-function #'helpful-callable)
-          (counsel-describe-variable-function #'helpful-variable)
-          :bind
-          ([remap describe-function] . counsel-describe-function)
-          ([remap describe-command] . helpful-command)
-          ([remap describe-variable] . counsel-describe-variable)
-          ([remap describe-key] . helpful-key))
+
+
 #+end_src
 
 #+begin_src emacs-lisp
-          
+
 #+end_src
 * Misc Multiple cursors/ER Region/move text
 
 #+begin_src emacs-lisp
   (use-package multiple-cursors
-     :ensure t
-     :bind 
-  ( "C-S-c C-S-c" . 'mc/edit-lines)
-  ( "C->"         . 'mc/mark-next-like-this)
-  ( "C-<"     .  'mc/mark-previous-like-this)
-  ( "C-c C-<" .  'mc/mark-all-like-this)
-  ( "C-\""    .  'mc/skip-to-next-like-this)
-  ( "C-:"     .  'mc/skip-to-previous-like-this)
-  ( "C-M->" . 'mc/mark-all-dwim))
+    :ensure t
+    :bind 
+    ( "C-S-c C-S-c" . 'mc/edit-lines)
+    ( "C->"         . 'mc/mark-next-like-this)
+    ( "C-<"     .  'mc/mark-previous-like-this)
+    ( "C-c C-<" .  'mc/mark-all-like-this)
+    ( "C-\""    .  'mc/skip-to-next-like-this)
+    ( "C-:"     .  'mc/skip-to-previous-like-this)
+    ( "C-M->" . 'mc/mark-all-dwim))
 
 
   (use-package expand-region
-            :ensure t
-            :bind
-            ("C-=" . #'er/expand-region))
+    :ensure t
+    :bind
+    ("C-=" . #'er/expand-region))
   (use-package move-text 
-            :ensure t
-  	  :config
-  	      (move-text-default-bindings)) 
+    :ensure t
+    :config
+    (move-text-default-bindings)) 
 
   ;; to move line above by copying a line below.
 #+end_src
@@ -562,10 +517,10 @@
 * eglot/lsp servers
 #+begin_src emacs-lisp
   (use-package eglot
-  :ensure t
-  :config
-     (add-to-list 'eglot-server-programs '(elixir-mode "~/code/elixir/elixir-ls/language_server.sh"))
-  )
+    :ensure t
+    :config
+    (add-to-list 'eglot-server-programs '(elixir-mode "~/code/elixir/elixir-ls/language_server.sh"))
+    )
 #+end_src
 
 ** elixir
@@ -576,49 +531,51 @@
 
 #+begin_src emacs-lisp
   (use-package lua-mode
-  :ensure t)
+    :ensure t)
 #+end_src
 
 #+begin_src emacs-lisp
-    (use-package
-     emacs
-     :ensure nil
-     :custom
+  (use-package
+    emacs
+    :ensure nil
+    :custom
 
-     ;; Should use:
-     ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
-     ;; at least once per installation or while changing this list
-     (treesit-language-source-alist
-      '((heex "https://github.com/phoenixframework/tree-sitter-heex")
-        (elixir "https://github.com/elixir-lang/tree-sitter-elixir")))
+    ;; Should use:
+    ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+    ;; at least once per installation or while changing this list
+    (treesit-language-source-alist
+     '((heex "https://github.com/phoenixframework/tree-sitter-heex")
+       (elixir "https://github.com/elixir-lang/tree-sitter-elixir")))
 
-     (major-mode-remap-alist
-      '((elixir-mode . elixir-ts-mode)))
-    )
+    (major-mode-remap-alist
+     '((elixir-mode . elixir-ts-mode))))
 #+end_src
 
-  #+begin_src emacs-lisp
-        (use-package
-         elixir-ts-mode
-         :hook (elixir-ts-mode . eglot-ensure)
-         (elixir-ts-mode
-          .
-          (lambda ()
-            (push '(">=" . ?\u2265) prettify-symbols-alist)
-            (push '("<=" . ?\u2264) prettify-symbols-alist)
-            (push '("!=" . ?\u2260) prettify-symbols-alist)
-            (push '("==" . ?\u2A75) prettify-symbols-alist)
-            (push '("=~" . ?\u2245) prettify-symbols-alist)
-            (push '("<-" . ?\u2190) prettify-symbols-alist)
-            (push '("->" . ?\u2192) prettify-symbols-alist)
-            (push '("<-" . ?\u2190) prettify-symbols-alist)
-            (push '("|>" . ?\u25B7) prettify-symbols-alist)))
-         (before-save . eglot-format))
+#+begin_src emacs-lisp
 
-        (add-hook 'elixir-mode-hook 'eglot-ensure)
-        (add-hook 'elixir-ts-mode-hook 'eglot-ensure)
-        (use-package inf-elixir
-          :ensure t
-          :bind
-            ("C-c C-z" . #'other-window))
+  (use-package elixir-ts-mode
+    :ensure t
+    :hook ((elixir-ts-mode . eglot-ensure)
+  	 (before-save . eglot-format-buffer))
+    :config
+    (add-hook 'elixir-ts-mode-hook
+              (lambda ()
+                (setq prettify-symbols-alist
+                      '((">=" . ?\u2265)
+                        ("<=" . ?\u2264)
+                        ("!=" . ?\u2260)
+                        ("==" . ?\u2A75)
+                        ("=~" . ?\u2245)
+                        ("<-" . ?\u2190)
+                        ("->" . ?\u2192)
+                        ("|>" . ?\u25B7)))
+                (prettify-symbols-mode 1))))
+
+
+
+
+  (use-package inf-elixir
+    :ensure t
+    :bind
+    ("C-c C-z" . #'other-window))
  #+end_src
