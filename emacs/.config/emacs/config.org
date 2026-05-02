@@ -125,26 +125,27 @@
 #+end_src
 * Lispy things  lispy/lispyville/sly/paredit
 #+begin_src emacs-lisp
-  (use-package lispy
-    :ensure t
-    :config
-    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-    (add-hook 'lisp-mode-hook   (lambda () (lispy-mode 1)))
-    :bind (
-  	 ("M-o" . other-window )))
+      (use-package lispy
+        :ensure t
+        :hook
+         (lisp-mode-hook . (lambda () (lispy-mode 1)))
+         (emacs-lisp-mode-hook . (lambda () (lispy-mode 1)))
+        :bind (
+      	 ("M-o" . other-window )))
 
 
 
-  (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
-  (use-package sly
-    :ensure t)
+      (use-package rainbow-delimiters
+        :ensure t
+        :hook (prog-mode . rainbow-delimiters-mode))
+      (use-package sly
+        :ensure t
+        :hook ()
 
-  (sly-symbol-completion-mode -1)
-  (if (eq system-type 'android)
-      (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
-    (setq inferior-lisp-program "/usr/bin/sbcl"))
+      (sly-symbol-completion-mode -1)
+      (if (eq system-type 'android)
+          (setq inferior-lisp-program "/data/data/com.termux/files/usr/bin/sbcl")
+        (setq inferior-lisp-program "/usr/bin/sbcl"))
 #+end_src
 
 * Windows
