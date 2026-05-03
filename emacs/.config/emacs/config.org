@@ -139,8 +139,8 @@
         :ensure t
         :hook (prog-mode . rainbow-delimiters-mode))
       (use-package sly
-        :ensure t
-        :hook ()
+        :ensure t)
+        
 
       (sly-symbol-completion-mode -1)
       (if (eq system-type 'android)
