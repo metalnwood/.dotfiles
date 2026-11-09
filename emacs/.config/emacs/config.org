@@ -475,7 +475,7 @@
   (global-set-key  (kbd "C-S-s")  #'avy-goto-char-2)
   (global-set-key  (kbd "C-S-p")  #'maw/up-ten-lines)
   (global-set-key  (kbd "C-S-k")  #'maw/kill-to-beginning)
-  (global-set-key  (kbd "C-o")  #'maw/vim-o)
+;;  (global-set-key  (kbd "C-o")  #'maw/vim-o)
   (global-set-key  (kbd "M-z")  #'zap-up-to-char)
   (global-set-key  (kbd "M-o")  #'other-window)
   (global-set-key  (kbd "M-\"")  #'cycle-spacing)
@@ -484,10 +484,11 @@
   (global-set-key  (kbd "C-M-S-h")  #'previous-buffer)
   (global-set-key  (kbd "C-M-S-q")  #'calc)
   (global-set-key [C-M-down] #'windmove-down)
-  (global-set-key [C-M-up] #'windmove-up )
+  (global-set-key [C-M-up] #'windmove-up)
   (global-set-key [C-M-left] #'windmove-left )
   (global-set-key [C-M-right] #'windmove-right )
-
+  (global-set-key (kbd "M-p") 'backward-paragraph)
+  (global-set-key (kbd "M-f") 'forward-paragraph)
 
 
 
