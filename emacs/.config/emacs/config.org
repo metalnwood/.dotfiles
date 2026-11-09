@@ -488,7 +488,7 @@
   (global-set-key [C-M-left] #'windmove-left )
   (global-set-key [C-M-right] #'windmove-right )
   (global-set-key (kbd "M-p") 'backward-paragraph)
-  (global-set-key (kbd "M-f") 'forward-paragraph)
+  (global-set-key (kbd "M-n") 'forward-paragraph)
 
 
 
